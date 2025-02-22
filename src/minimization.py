@@ -1,14 +1,15 @@
 # src/minimization.py
 from typing import Dict, Any
+from model.afd import AFD
 
-def minimizar_afd(afd: Dict[Any, Any]) -> Dict[Any, Any]:
+def minimizar_afd(afd: Dict[Any, Any]) -> AFD:
     """
     Minimiza el AFD usando el algoritmo de particionamiento de estados.
     
     Parámetros:
-        afd (Dict): AFD no minimizado.
+        afd (afd): AFD no minimizado.
     
     Retorna:
-        Dict: AFD minimizado.
+        AFD: AFD minimizado.
     """
     pass
