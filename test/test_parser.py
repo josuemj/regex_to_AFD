@@ -18,7 +18,8 @@ class TestAgregarConcatenacion(unittest.TestCase):
             "a|b*cd": "a|b*.c.d",          
             "a(b|c)*d": "a.(b|c)*.d",      
             "x+y?z": "x+.y?.z",            
-            "(a|b)+(c|d)": "(a|b)+.(c|d)"  
+            "(a|b)+(c|d)": "(a|b)+.(c|d)", 
+            "(a|b)+abc?" : "(a|b)+.a.b.c?" # class sample
         }
         
         for regex, expected in test_cases.items():
