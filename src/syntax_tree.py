@@ -18,7 +18,7 @@ def convertir_a_posfijo(regex: str) -> str:
     print('postfix -> '+postfix)
     return postfix
 
-def construir_arbol(regex: str) -> Nodo:
+def construir_arbol(regex: str) -> Tree:
     """
     Construye el árbol sintáctico a partir de una expresión regualar.
     
@@ -26,7 +26,7 @@ def construir_arbol(regex: str) -> Nodo:
         posfijo (str): Expresión regular en notación posfija.
     
     Retorna:
-        Nodo: Raíz del árbol sintáctico construido.
+        Tree: árbol sintáctico construido.
     """
     postfijo = convertir_a_posfijo(regex)
     return Tree(expresion_postfija=postfijo)
