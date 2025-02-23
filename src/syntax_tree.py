@@ -1,7 +1,8 @@
 # src/syntax_tree.py
 from typing import Optional, Set
-from model.nodo import Nodo
-from utils.shunting_yard import shunting_yard
+from src.model.nodo import Nodo
+from src.utils.shunting_yard import shunting_yard
+from model.tree import Tree
 
 def convertir_a_posfijo(regex: str) -> str:
     """
@@ -14,11 +15,12 @@ def convertir_a_posfijo(regex: str) -> str:
         str: Expresión regular en notación posfija.
     """
     postfix = shunting_yard(regex=regex)
+    print('postfix -> '+postfix)
     return postfix
 
-def construir_arbol(posfijo: str) -> Nodo:
+def construir_arbol(regex: str) -> Nodo:
     """
-    Construye el árbol sintáctico a partir de una expresión regular en notación posfija.
+    Construye el árbol sintáctico a partir de una expresión regualar.
     
     Parámetros:
         posfijo (str): Expresión regular en notación posfija.
@@ -26,7 +28,9 @@ def construir_arbol(posfijo: str) -> Nodo:
     Retorna:
         Nodo: Raíz del árbol sintáctico construido.
     """
-    pass
+    postfijo = convertir_a_posfijo(regex)
+    return Tree(expresion_postfija=postfijo)
+     
 
 def calcular_anulable(raiz: Nodo) -> None:
     """

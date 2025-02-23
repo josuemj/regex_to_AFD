@@ -2,6 +2,7 @@ def parsear_regex(regex: str) -> str:
     """Agrega concatenaciones y expande operadores `?` y `+`."""
     regex_concatenada = agregar_concatenacion(regex)
     regex_expandida = expandir_operadores(regex_concatenada)
+    print("regex expandida -> "+regex_expandida)
     return regex_expandida
 
 # Reescribir la función `agregar_concatenacion` asegurando que funcione correctamente con pruebas específicas
@@ -102,7 +103,8 @@ def aumentar_regex(regex: str) -> str:
     Retorna:
         str: Expresión regular aumentada (con '#' al final).
     """
-    return regex+"#"
-
+    regex_aumentada = regex+".#"
+    print("regex aumentada -> "+regex_aumentada)
+    return regex_aumentada
 
 

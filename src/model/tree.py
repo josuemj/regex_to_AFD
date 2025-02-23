@@ -23,17 +23,20 @@ class Tree:
         pila = Stack()
         posicion = 1  # Contador para asignar posiciones a los nodos hoja
 
-        print("\nDepuración: Construcción del Árbol Sintáctico\n")
+        print("\n====== Construcción del Árbol Sintáctico ======\n")
 
         for caracter in self.expresion_postfija:
-            print(f" - Procesando: {caracter}")
-            print(f"   Pila antes de procesar: {[n.valor for n in pila.items]}")
+            print(f"🔹 Procesando: {caracter}")
+            print(f"  📍 Pila antes de procesar: {[n.valor for n in pila.items]}")
 
-            if caracter.isalnum() or caracter == 'E':  # Si es un operando (letra o 'E' para ε)
-                nodo = Nodo(valor=caracter, posicion=posicion)
+            # ✅ Tratar '#' como un operando, igual que 'a', 'b', 'E', etc.
+            if caracter.isalnum() or caracter in {'E', '#'}:  # Si es un operando (letra, 'E' para ε, '#' como marcador)
+                posicion_nodo = None if caracter == 'E' else posicion
+                nodo = Nodo(valor=caracter, posicion=posicion_nodo )
                 pila.push(nodo)
-                posicion += 1  # Incrementar la posición única para nodos hoja
-                print(f"  hoja - Se agregó nodo hoja: {nodo.valor} (Pos: {nodo.posicion})")
+                if caracter != 'E':  # Solo incrementar la posición si NO es epsilon
+                    posicion += 1
+                print(f"  ✅ Se agregó nodo hoja: {nodo.valor} (Pos: {nodo.posicion})")
 
             elif caracter in {'|', '.', '*'}:  # Si es un operador
                 if caracter == '*':  # Operador unario (Cerradura de Kleene)
@@ -41,7 +44,7 @@ class Tree:
                         raise ValueError("Expresión postfija mal formada: falta operando para '*'")
                     hijo = pila.pop()
                     nodo = Nodo(valor=caracter, izquierdo=hijo)
-                    print(f"  -- Se creó nodo * con hijo {hijo.valor}")
+                    print(f"  🔄 Se creó nodo * con hijo {hijo.valor}")
 
                 else:  # Operador binario ('|' o '.')
                     if pila.is_empty():
@@ -51,15 +54,15 @@ class Tree:
                         raise ValueError(f"Expresión postfija mal formada: falta operandos para '{caracter}'")
                     izquierdo = pila.pop()
                     nodo = Nodo(valor=caracter, izquierdo=izquierdo, derecho=derecho)
-                    print(f"  -- Se creó nodo {caracter} con hijos {izquierdo.valor}, {derecho.valor}")
+                    print(f"  🔄 Se creó nodo {caracter} con hijos {izquierdo.valor}, {derecho.valor}")
 
                 pila.push(nodo)
 
-            print(f"  > Pila después de procesar: {[n.valor for n in pila.items]}")
+            print(f"  📍 Pila después de procesar: {[n.valor for n in pila.items]}")
             print("-" * 50)
 
         if pila.is_empty() or len(pila.items) != 1:
             raise ValueError("Expresión postfija mal formada: faltan operadores")
 
-        print("\n> Árbol construido correctamente\n")
+        print("\n✅ Árbol construido correctamente\n")
         return pila.pop()  # Raíz del árbol sintáctico

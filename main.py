@@ -15,4 +15,4 @@ afd = direct_method(regex=regex) # afd()
 
 cadena = "aabc"
 
-pertenece = simulate_afd(afd=afd) # bool
+# pertenece = simulate_afd(afd=afd) # bool
