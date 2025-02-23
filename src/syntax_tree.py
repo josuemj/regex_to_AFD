@@ -1,6 +1,7 @@
 # src/syntax_tree.py
 from typing import Optional, Set
 from model.nodo import Nodo
+from utils.shunting_yard import shunting_yard
 
 def convertir_a_posfijo(regex: str) -> str:
     """
@@ -12,7 +13,8 @@ def convertir_a_posfijo(regex: str) -> str:
     Retorna:
         str: Expresión regular en notación posfija.
     """
-    pass
+    postfix = shunting_yard(regex=regex)
+    return postfix
 
 def construir_arbol(posfijo: str) -> Nodo:
     """
