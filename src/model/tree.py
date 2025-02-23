@@ -13,6 +13,7 @@ class Tree:
     """
     def __init__(self, expresion_postfija: str):
         self.expresion_postfija = expresion_postfija
+        self.followpos = {}
         self.raiz: Optional[Nodo] = self.construir_arbol()
     
     def calcular_anulable(self, nodo: Optional[Nodo]) -> bool:
@@ -108,6 +109,40 @@ class Tree:
 
         print(f"Nodo: {nodo.valor}, UltimaPosicion: {nodo.ultima_pos}")
         return nodo.ultima_pos
+
+    def calcular_siguientePosicion(self, nodo:Optional[Nodo]) :
+        """
+        Calcula la siguiente posición (followpos) de cada nodo en el árbol sintáctico.
+        Basado en las reglas de concatenación (.) y cerradura de Kleene (*).
+        """
+        if nodo is None:
+            return
+
+        # Regla 7.1: Si el nodo es un operador de concatenación '.'
+        if nodo.valor == ".":
+            c1 = nodo.izquierdo
+            c2 = nodo.derecho
+            if c1 and c2:
+                for pos in c1.ultima_pos:  # Para cada última posición de c1
+                    if pos not in self.followpos:
+                        self.followpos[pos] = set()
+                    self.followpos[pos].update(c2.primera_pos)  # Agregar primeras posiciones de c2
+
+        # Regla 7.2: Si el nodo es un operador de cerradura de Kleene '*'
+        elif nodo.valor == "*":
+            c = nodo.izquierdo
+            if c:
+                for pos in c.ultima_pos:  # Para cada última posición de c
+                    if pos not in self.followpos:
+                        self.followpos[pos] = set()
+                    self.followpos[pos].update(c.primera_pos)  # Agregar primeras posiciones de c
+
+        # Calcular recursivamente en los hijos
+        self.calcular_siguientePosicion(nodo.izquierdo)
+        self.calcular_siguientePosicion(nodo.derecho)
+
+        # Imprimir información del nodo después del cálculo
+        print(f"Nodo: {nodo.valor}, SiguientePosicion: {self.followpos.get(nodo.posicion, set())}")
 
     def construir_arbol(self) -> Optional[Nodo]:
         """

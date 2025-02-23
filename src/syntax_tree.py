@@ -84,11 +84,19 @@ def calcular_ultima_pos(arbol: Tree) -> Tree:
 
     return arbol
 
-def calcular_siguiente_pos(raiz: Nodo) -> None:
+def calcular_siguiente_pos(arbol: Tree) -> Tree:
     """
     Calcula la siguiente posición para cada nodo del árbol sintáctico basado en la función siguiente.
-    
+
     Parámetros:
-        raiz (Nodo): Raíz del árbol sintáctico.
+        Tree: árbol sintáctico con anulable.
+    
+    Retorna:
+        Tree: árbol sintáctico con funcion siguiente posicion construido.
     """
-    pass
+    print("\n====== Construcción de Funcion Siguiente Posicion======\n")
+
+    if arbol.raiz:
+        arbol.calcular_siguientePosicion(arbol.raiz)
+
+    return arbol
