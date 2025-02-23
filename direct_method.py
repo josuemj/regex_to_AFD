@@ -2,6 +2,9 @@ from typing import Dict, Any
 from src.model.afd import AFD
 from src.parser import parsear_regex, aumentar_regex #1, 2
 from src.syntax_tree import construir_arbol, calcular_anulable, calcular_primera_pos, calcular_ultima_pos, calcular_siguiente_pos
+from src.build_afd import construir_afd
+from src.simulation import evaluar_cadena
+
 def direct_method(regex: str) -> AFD:
     """
     Aplica el método directo (Followpos Algorithm) para convertir una expresión regular a un AFD.
@@ -39,3 +42,13 @@ def direct_method(regex: str) -> AFD:
 
     # 7 Calcular Funcion Siguiente Posicion
     arbol = calcular_siguiente_pos(arbol)
+    
+    print("\nFollowpos (Posición : Caracter : {posiciones siguientes}):")
+    for pos, info in sorted(arbol.followpos.items()):
+        print(f"{pos} : '{info['valor']}' : {info['siguientes']}")
+
+    #8, 9 tabla de transiciones y AFD
+    afd = construir_afd(arbol=arbol)
+    afd.imprimir()
+    
+    return afd

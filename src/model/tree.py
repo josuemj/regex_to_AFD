@@ -110,39 +110,49 @@ class Tree:
         print(f"Nodo: {nodo.valor}, UltimaPosicion: {nodo.ultima_pos}")
         return nodo.ultima_pos
 
-    def calcular_siguientePosicion(self, nodo:Optional[Nodo]) :
+    def calcular_siguientePosicion(self, nodo: Optional[Nodo]):
         """
         Calcula la siguiente posición (followpos) de cada nodo en el árbol sintáctico.
-        Basado en las reglas de concatenación (.) y cerradura de Kleene (*).
+        Guarda además el carácter asociado a cada posición.
         """
         if nodo is None:
             return
 
-        # Regla 7.1: Si el nodo es un operador de concatenación '.'
+        # Registra el valor del nodo hoja en followpos
+        if nodo.es_hoja() and nodo.posicion is not None:
+            if nodo.posicion not in self.followpos:
+                self.followpos[nodo.posicion] = {"valor": nodo.valor, "siguientes": set()}
+            else:
+                self.followpos[nodo.posicion]["valor"] = nodo.valor  # Asegurar valor correcto
+
+        # Regla 7.1: Operador de concatenación '.'
         if nodo.valor == ".":
             c1 = nodo.izquierdo
             c2 = nodo.derecho
             if c1 and c2:
-                for pos in c1.ultima_pos:  # Para cada última posición de c1
+                for pos in c1.ultima_pos:
                     if pos not in self.followpos:
-                        self.followpos[pos] = set()
-                    self.followpos[pos].update(c2.primera_pos)  # Agregar primeras posiciones de c2
+                        self.followpos[pos] = {"valor": "", "siguientes": set()}
+                    self.followpos[pos]["siguientes"].update(c2.primera_pos)
 
-        # Regla 7.2: Si el nodo es un operador de cerradura de Kleene '*'
+        # Regla 7.2: Operador de Kleene '*'
         elif nodo.valor == "*":
             c = nodo.izquierdo
             if c:
-                for pos in c.ultima_pos:  # Para cada última posición de c
+                for pos in c.ultima_pos:
                     if pos not in self.followpos:
-                        self.followpos[pos] = set()
-                    self.followpos[pos].update(c.primera_pos)  # Agregar primeras posiciones de c
+                        self.followpos[pos] = {"valor": "", "siguientes": set()}
+                    self.followpos[pos]["siguientes"].update(c.primera_pos)
 
-        # Calcular recursivamente en los hijos
+        # Recursión sobre hijos
         self.calcular_siguientePosicion(nodo.izquierdo)
         self.calcular_siguientePosicion(nodo.derecho)
 
-        # Imprimir información del nodo después del cálculo
-        print(f"Nodo: {nodo.valor}, SiguientePosicion: {self.followpos.get(nodo.posicion, set())}")
+        # Información de depuración
+        if nodo.posicion:
+            print(f"Nodo: {nodo.valor}, Posición: {nodo.posicion}, "
+                f"SiguientePosicion: {self.followpos[nodo.posicion]}")
+
 
     def construir_arbol(self) -> Optional[Nodo]:
         """
@@ -195,3 +205,28 @@ class Tree:
 
         print("\n✅ Árbol construido correctamente\n")
         return pila.pop()  # Raíz del árbol sintáctico
+
+    def imprimir_nodos(self, nodo: Optional[Nodo] = None):
+        """
+        Imprime todos los atributos de cada nodo en recorrido preorden.
+        """
+        if nodo is None:
+            nodo = self.raiz
+            print("\n====== Atributos de cada Nodo (Recorrido Preorden) ======\n")
+
+        if nodo is None:  # <-- Añadir esta línea para evitar la recursión infinita
+            return
+
+        print(f"Nodo Valor: {nodo.valor}")
+        print(f"  Posición: {nodo.posicion}")
+        print(f"  Anulable: {nodo.anulable}")
+        print(f"  Primera Posición: {nodo.primera_pos}")
+        print(f"  Última Posición: {nodo.ultima_pos}")
+        print(f"  Es hoja: {nodo.es_hoja()}")
+        print("-" * 50)
+
+        if nodo.izquierdo is not None:
+            self.imprimir_nodos(nodo.izquierdo)
+        if nodo.derecho is not None:
+            self.imprimir_nodos(nodo.derecho)
+

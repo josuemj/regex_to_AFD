@@ -1,19 +1,34 @@
 from typing import Dict, Any
+from model.afd import AFD
 
-def simulate_afd(afd: Dict[Any, Any], input_string: str) -> bool:
+def evaluar_cadena(afd: AFD, cadena : str) -> bool:
     """
-    Simula un Autómata Finito Determinista (AFD) para determinar si una cadena es aceptada.
+    Evalúa si una cadena pertenece al lenguaje del AFD.
 
     Parámetros:
-        afd (Dict[Any, Any]): Diccionario que representa un AFD. Se espera que incluya:
-            - "Q": Conjunto de estados.
-            - "Σ": Alfabeto.
-            - "δ": Función de transición, un diccionario que mapea (estado, símbolo) -> estado.
-            - "q0": Estado inicial.
-            - "F": Conjunto de estados de aceptación.
-        input_string (str): Cadena que se desea evaluar.
+        afd (AFD): Autómata finito determinista generado.
+        cadena (str): Cadena a evaluar.
 
     Retorna:
-        bool: True si la cadena es aceptada por el AFD; False en caso contrario.
+        bool: True si la cadena es aceptada, False en caso contrario.
     """
-    return False
+    estado_actual = afd.q0
+
+    for simbolo in cadena:
+        transicion = (estado_actual, simbolo)
+        if transicion in afd.T:
+            estado_actual = afd.T[transicion]
+        else:
+            # Transición no válida, la cadena no pertenece
+            return False
+
+    # La cadena es aceptada si termina en un estado final
+    return estado_actual in afd.F
+
+if __name__ == "__main__":
+    cadena_prueba = "bbbab"
+    aceptada = evaluar_cadena(afd, cadena_prueba)
+    if aceptada:
+        print(f"La cadena '{cadena_prueba}' es aceptada por el AFD.")
+    else:
+        print(f"La cadena '{cadena_prueba}' NO es aceptada por el AFD.")

@@ -37,4 +37,18 @@ class AFD:
     def __repr__(self) -> str:
         return (f"AFD(Q={self.Q}, A={self.A}, T={self.T}, "
                 f"q0='{self.q0}', F={self.F})")
+    
+    def imprimir(self):
+        """
+        Imprime claramente el autómata generado.
+        """
+        print("\n====== Autómata Finito Determinista (AFD) ======")
+        print(f"Estados: {self.Q}")
+        print(f"Alfabeto: {self.A}")
+        print(f"Estado Inicial: {self.q0}")
+        print(f"Estados Finales: {self.F}")
+        print("\nTabla de Transiciones:")
+        for (estado, simbolo), destino in sorted(self.T.items()):
+            print(f"δ({estado}, '{simbolo}') → {destino}")
+        print("================================================")
 
