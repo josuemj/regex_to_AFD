@@ -37,7 +37,10 @@ def calcular_anulable(arbol: Tree) -> Tree:
     Calcula la propiedad anulable para cada nodo del árbol sintáctico.
     
     Parámetros:
-        raiz (Nodo): Raíz del árbol sintáctico.
+        Tree: árbol sintáctico.
+    
+    Retorna:
+        Tree: árbol sintáctico con anulable construido.
     """
     print("\n====== Construcción de Anulable======\n")
 
@@ -46,14 +49,23 @@ def calcular_anulable(arbol: Tree) -> Tree:
     
     return arbol 
 
-def calcular_primera_pos(raiz: Nodo) -> None:
+def calcular_primera_pos(arbol: Tree) -> Tree:
     """
     Calcula la primera posición para cada nodo del árbol sintáctico.
     
     Parámetros:
-        raiz (Nodo): Raíz del árbol sintáctico.
+        Tree: árbol sintáctico con anulable.
+    
+    Retorna:
+        Tree: árbol sintáctico con funcion primera posicion construido.
     """
-    pass
+
+    print("\n====== Construcción de Funcion Primera Posicion======\n")
+
+    if arbol.raiz:
+        arbol.calcular_primeraPosicion(arbol.raiz)
+
+    return arbol
 
 def calcular_ultima_pos(raiz: Nodo) -> None:
     """

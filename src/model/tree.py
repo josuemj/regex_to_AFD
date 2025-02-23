@@ -47,6 +47,37 @@ class Tree:
 
         return nodo.anulable
 
+    def calcular_primeraPosicion(self, nodo:Optional[Nodo]) -> Set[int]:
+        """
+        Calcula la primera posición de cada nodo en el árbol sintáctico.
+        """
+
+        if nodo is None:
+            return set()
+        
+        #Si es hoja final, su primera posicion es su posicion
+        if nodo.izquierdo is None and nodo.derecho is None:
+            nodo.primera_pos = {nodo.posicion} if nodo.posicion is not None else set()
+            print(f"Nodo: {nodo.valor}, PrimeraPosición: {nodo.primera_pos}")
+            return nodo.primera_pos
+
+        # Si es un operador, calcular recursivamente en sus hijos
+        izq_primera = self.calcular_primeraPosicion(nodo.izquierdo) if nodo.izquierdo else set()
+        der_primera = self.calcular_primeraPosicion(nodo.derecho) if nodo.derecho else set()
+
+        if nodo.valor == "|":  # Unión: unión de ambos hijos
+            nodo.primera_pos = izq_primera | der_primera
+        elif nodo.valor == ".":  # Concatenación
+            if nodo.izquierdo.anulable:
+                nodo.primera_pos = izq_primera | der_primera
+            else:
+                nodo.primera_pos = izq_primera
+        elif nodo.valor == "*":  # Kleene: primeraposición es igual a la del hijo
+            nodo.primera_pos = izq_primera
+
+        print(f"Nodo: {nodo.valor}, PrimeraPosición: {nodo.primera_pos}")
+        return nodo.primera_pos
+
     def construir_arbol(self) -> Optional[Nodo]:
         """
         Construye el árbol sintáctico a partir de la expresión regular en notación postfija.
