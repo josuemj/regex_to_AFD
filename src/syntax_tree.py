@@ -32,14 +32,19 @@ def construir_arbol(regex: str) -> Tree:
     return Tree(expresion_postfija=postfijo)
      
 
-def calcular_anulable(raiz: Nodo) -> None:
+def calcular_anulable(arbol: Tree) -> Tree:
     """
     Calcula la propiedad anulable para cada nodo del árbol sintáctico.
     
     Parámetros:
         raiz (Nodo): Raíz del árbol sintáctico.
     """
-    pass
+    print("\n====== Construcción de Anulable======\n")
+
+    if arbol.raiz:
+        arbol.calcular_anulable(arbol.raiz)
+    
+    return arbol 
 
 def calcular_primera_pos(raiz: Nodo) -> None:
     """

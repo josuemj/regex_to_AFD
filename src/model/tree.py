@@ -14,6 +14,38 @@ class Tree:
     def __init__(self, expresion_postfija: str):
         self.expresion_postfija = expresion_postfija
         self.raiz: Optional[Nodo] = self.construir_arbol()
+    
+    def calcular_anulable(self, nodo: Optional[Nodo]) -> bool:
+        """
+        Calcula si un nodo es anulable (si acepta la cadena vacía) y lo almacena en su atributo `anulable`.
+        Devuelve `True` si el nodo es anulable, `False` en caso contrario.
+        """
+
+        if nodo is None:
+            return False
+
+        # Si es un nodo hoja
+        if nodo.izquierdo is None and nodo.derecho is None:
+            nodo.anulable = nodo.valor == "E"  # Un nodo hoja solo es anulable si es 'E' (ε)
+            print(f"Nodo: {nodo.valor}, Anulable: {nodo.anulable}") 
+            return nodo.anulable
+
+        # Primero calcular anulabilidad en los hijos recursivamente
+        izq_anulable = self.calcular_anulable(nodo.izquierdo) if nodo.izquierdo else False
+        der_anulable = self.calcular_anulable(nodo.derecho) if nodo.derecho else False
+
+        # Aplicar reglas de operadores
+        if nodo.valor == "|":  # Unión: anulable si al menos un hijo lo es
+            nodo.anulable = izq_anulable or der_anulable
+        elif nodo.valor == ".":  # Concatenación: anulable si ambos lo son
+            nodo.anulable = izq_anulable and der_anulable
+        elif nodo.valor == "*":  # Kleene: siempre anulable
+            nodo.anulable = True
+
+        # Mostrar información del nodo después de calcular su anulabilidad
+        print(f"Nodo: {nodo.valor}, Anulable: {nodo.anulable}") 
+
+        return nodo.anulable
 
     def construir_arbol(self) -> Optional[Nodo]:
         """
