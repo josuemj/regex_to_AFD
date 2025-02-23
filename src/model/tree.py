@@ -77,6 +77,37 @@ class Tree:
 
         print(f"Nodo: {nodo.valor}, PrimeraPosición: {nodo.primera_pos}")
         return nodo.primera_pos
+    
+    def calcular_ultimaPosicion(self, nodo:Optional[Nodo]) -> Set[int]:
+        """
+        Calcula la primera posición de cada nodo en el árbol sintáctico.
+        """
+
+        if nodo is None:
+            return set()
+        
+        #Si es hoja final, su primera posicion es su posicion
+        if nodo.izquierdo is None and nodo.derecho is None:
+            nodo.ultima_pos = {nodo.posicion} if nodo.posicion is not None else set()
+            print(f"Nodo: {nodo.valor}, UltimaPosicion: {nodo.ultima_pos}")
+            return nodo.ultima_pos
+        
+        # Si es un operador, calcular recursivamente en sus hijos
+        izq_primera = self.calcular_ultimaPosicion(nodo.izquierdo) if nodo.izquierdo else set()
+        der_primera = self.calcular_ultimaPosicion(nodo.derecho) if nodo.derecho else set()
+
+        if nodo.valor == "|":  # Unión: unión de ambos hijos
+            nodo.ultima_pos = izq_primera | der_primera
+        elif nodo.valor == ".":  # Concatenación
+            if nodo.derecho.anulable:
+                nodo.ultima_pos = izq_primera | der_primera
+            else:
+                nodo.ultima_pos = der_primera
+        elif nodo.valor == "*":  # Kleene: UltimaPosicion es igual a la del hijo
+            nodo.ultima_pos = izq_primera
+
+        print(f"Nodo: {nodo.valor}, UltimaPosicion: {nodo.ultima_pos}")
+        return nodo.ultima_pos
 
     def construir_arbol(self) -> Optional[Nodo]:
         """

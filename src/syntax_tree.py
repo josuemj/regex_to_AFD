@@ -67,14 +67,22 @@ def calcular_primera_pos(arbol: Tree) -> Tree:
 
     return arbol
 
-def calcular_ultima_pos(raiz: Nodo) -> None:
+def calcular_ultima_pos(arbol: Tree) -> Tree:
     """
     Calcula la última posición para cada nodo del árbol sintáctico.
     
     Parámetros:
-        raiz (Nodo): Raíz del árbol sintáctico.
+        Tree: árbol sintáctico con anulable.
+    
+    Retorna:
+        Tree: árbol sintáctico con funcion ultima posicion construido.
     """
-    pass
+    print("\n====== Construcción de Funcion Ultima Posicion======\n")
+
+    if arbol.raiz:
+        arbol.calcular_ultimaPosicion(arbol.raiz)
+
+    return arbol
 
 def calcular_siguiente_pos(raiz: Nodo) -> None:
     """
