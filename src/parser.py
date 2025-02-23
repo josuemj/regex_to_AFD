@@ -33,18 +33,17 @@ def agregar_concatenacion(regex: str) -> str:
 
     return resultado
 
-
 def expandir_operadores(regex: str) -> str:
-    """Sustituye los operadores `+` y `?` por sus equivalentes en `*` y `|ε`."""
+    """Sustituye los operadores `+` y `?` por sus equivalentes en `*` y `|E`, asegurando concatenaciones correctas."""
     resultado = ""
     i = 0
+
     while i < len(regex):
-        if regex[i] == '+':  # A+ -> A·A*
-            anterior = resultado[-1]
-            if anterior != ')':  # Si es un solo carácter
-                resultado += '·' + anterior + '*'
+        if regex[i] == '+':  # A+ -> A.A*
+            anterior = resultado[-1] if resultado else ''
+            if anterior != ')' and anterior:  # Si es un solo carácter
+                resultado += '.' + anterior + '*'
             else:  # Si es una subexpresión (cerrada con ')')
-                # Buscar el inicio de la subexpresión
                 parentesis = 1
                 j = len(resultado) - 2
                 while j >= 0 and parentesis > 0:
@@ -54,14 +53,13 @@ def expandir_operadores(regex: str) -> str:
                         parentesis -= 1
                     j -= 1
                 subexpresion = resultado[j+1:]  # Extraer subexpresión
-                resultado += '·' + subexpresion + '*'  # A+ -> A·A*
-        
-        elif regex[i] == '?':  # A? -> A|ε
-            anterior = resultado[-1]
-            if anterior != ')':  # Si es un solo carácter
-                resultado = resultado[:-1] + '(' + anterior + '|ε)'
+                resultado += '.' + subexpresion + '*'  # A+ -> A.A*
+
+        elif regex[i] == '?':  # A? -> A|E
+            anterior = resultado[-1] if resultado else ''
+            if anterior != ')' and anterior:  # Si es un solo carácter
+                resultado = resultado[:-1] + '(' + anterior + '|E)'
             else:  # Si es una subexpresión
-                # Buscar el inicio de la subexpresión
                 parentesis = 1
                 j = len(resultado) - 2
                 while j >= 0 and parentesis > 0:
@@ -71,14 +69,28 @@ def expandir_operadores(regex: str) -> str:
                         parentesis -= 1
                     j -= 1
                 subexpresion = resultado[j+1:]  # Extraer subexpresión
-                resultado = resultado[:j+1] + '(' + subexpresion + '|ε)'
-        
+                resultado = resultado[:j+1] + '(' + subexpresion + '|E)'
+
         else:
             resultado += regex[i]
         
         i += 1
 
-    return resultado
+    # Evitar concatenaciones innecesarias tras expansión
+    while ".." in resultado:
+        resultado = resultado.replace("..", ".")
+
+    # Agregar `.` después de `*`, `?`, o `)` cuando sea necesario
+    nuevo_resultado = ""
+    for j in range(len(resultado) - 1):
+        nuevo_resultado += resultado[j]
+        if resultado[j] in {'*', ')'} and resultado[j + 1] not in {'|', ')', '*', '?', '+'}:
+            if resultado[j + 1] != '.':  # Evitar concatenación extra
+                nuevo_resultado += '.'
+    nuevo_resultado += resultado[-1]
+
+    return nuevo_resultado
+
 
 def aumentar_regex(regex: str) -> str:
     """
