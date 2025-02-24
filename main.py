@@ -5,13 +5,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.parser import parsear_regex
 from direct_method import direct_method
 from src.simulation import evaluar_cadena
-from src.build_afd import min_afd
+from src.minimization import minAFD
 # E = epsilon
 
 regex = "(a|b)+abc?"
 afd = direct_method(regex=regex) # afd()
 
-# afd_min = min_afd(afd=afd) 
+print("\n====== AFD minimizado con algoritmo de particion ======\n")
+afd =  minAFD(afd)
+afd.imprimir()  
 
 cadena = "aaaaabc"
 
