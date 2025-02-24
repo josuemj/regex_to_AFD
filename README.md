@@ -99,12 +99,6 @@ python -m unittest discover tests
 git clone https://github.com/tuusuario/regex_to_AFD.git
 cd regex_to_AFD
 ```
-
-### **🔹 Instalar dependencias**
-```bash
-pip install -r requirements.txt
-```
-
 ### **🔹 Ejecutar el programa**
 ```bash
 python main.py
